@@ -6,18 +6,21 @@ var express = require('express'),
   bodyParser = require('body-parser');
   
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb'); 
 
+mongoose.connect(process.env.MONGODB_URI, function (err, database) {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+  console.log("Database connection ready");
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 var routes = require('./api/routes/todoListRoutes');
 routes(app);
 
-
 app.listen(port);
-
 
 console.log('todo list RESTful API server started on: ' + port);
